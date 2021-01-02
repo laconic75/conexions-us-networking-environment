@@ -16,6 +16,7 @@ module "dns_zone" {
 
   dns_root = var.dns_root
   region   = var.region
+  vpc      = var.vpc
 }
 
 # Add web-server role
@@ -37,6 +38,11 @@ resource "aws_iam_role" "web_server_role" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "web_server_role" {
+  name = "web_server_${var.dns_root}"
+  role = aws_iam_role.web_server_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "acme_challenge" {
@@ -71,7 +77,7 @@ resource "aws_iam_policy" "resolve_certificate_challenge_route53" {
                 "route53:ChangeResourceRecordSets"
             ],
             "Resource" : [
-                "arn:aws:route53:::hostedzone/${module.dns_zone.dns_zone_id}"
+                "arn:aws:route53:::hostedzone/${module.dns_zone.public_dns_zone_id}"
             ]
         }
     ]
