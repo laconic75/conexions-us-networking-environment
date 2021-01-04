@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 module "dns_zone" {
-  source = "/home/joel/Source/terraform-aws-route-53-domain"
+  source = "git@github.com:laconic75/terraform-aws-route-53-domain.git"
 
   dns_root = var.dns_root
   region   = var.region
